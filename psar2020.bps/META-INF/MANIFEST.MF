@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PSAR2020 BPS
+Bundle-SymbolicName: psar2020.bps;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.jdt,
+ org.eclipse.jdt.core,
+ org.eclipse.ui,
+ org.eclipse.ui.workbench,
+ org.eclipse.text,
+ org.eclipse.core.filebuffers,
+ org.eclipse.core.resources
+Eclipse-LazyStart: true
