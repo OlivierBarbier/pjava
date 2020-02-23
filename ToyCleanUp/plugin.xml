@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.jdt.ui.cleanUps">
+      <cleanUp
+            class="ui.fix.CopyrightUpdaterCleanUp"
+            id="ui.fix.CopyrightUpdaterCleanUp">
+      </cleanUp>
+      
+      <cleanUpOptionsInitializer
+            class="ui.fix.CopyrightOnSaveOptionsInitializer"
+            cleanUpKind="saveAction">
+      </cleanUpOptionsInitializer>
+   </extension>
+
+</plugin>

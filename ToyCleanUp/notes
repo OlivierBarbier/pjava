@@ -1,0 +1,49 @@
+18/02/2020 05h22m
+
+https://help.eclipse.org/2019-12/topic/org.eclipse.jdt.doc.isv/guide/jdt_api_contributing_a_cleanup.htm?cp=3_0_1_5
+
+A noter : le code pour accomplir le nettoyage ("cleanUp") est architecturé.
+
+L'idée principal est qu'on ne développe pas un nettoyage personnalisé "comme on veut"
+mais on crée (sur un plan conceptuel) une "instance" de nettoyage qui respecte
+les choix architecturaux strictes des auteurs.
+
+On pourrait contourné les principes architecturaux des auteurs mais c'est d'une part
+inélégant et surtout très inefficace.
+
+Contraiment à un code plus trivial, où l'on peut coder "comme on veut" du moment qu"on respecte
+une ou deux interfaces. Ici, il faut respecter des principes architecturaux qui sont induits
+par les interfaces. Cependant, il faut aller au-delà des interfaces et s'attacher à
+comprendre l'architecture du système afin de pouvoir s'y inscrire.
+
+
+Création d'un "clean up" :
+1. cleanUp
+2. cleanUpOptionInitializer
+3. cleanUpConfigurationUi
+
+ICleanUp -> ICleanUpFix
+
+ICleanUp est un coquille qui abrite :
+1. ICleanUpFix la classe responsable d'effectuer concrètement le nettoyage
+1bis. createCleanUp la méthode qui effectue concrètement le nettoyage.
+2. l'initialisation des options de nettoyage (options par défaut)
+3. l'ihm de configuration des options
+
+==
+
+<Méthode la plus importante>
+ICleanUpFix.createCleanUp : effectue concrètement le nettoyage
+-> non c juste une fabrique (un méthode pour créer l'objet ICleanUpFix)
+-> ICleanUpFix.createChange est le vrai méthode qui fat le taf. Un bon brek point sur cette méthode 
+pour voir comment elle travail -> C LE NEXT STEP [REPRENDRE ICI]
+
+<Méthode d'entrée>
+ICleanUp.createFix : invoque ICleanUpFix.createCleanUp avec le contexte nécessaire à son fonctionnement.
+
+
+<root>.ui.fix.<CamelCaseName>CleanUp
+<root>.corext.fix.<CamelCaseName>Fix
+
+org.eclipse.jdt.internal.ui.fix.RedundantSemicolonsCleanUp
+
