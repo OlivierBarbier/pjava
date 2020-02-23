@@ -4,12 +4,12 @@
    <extension
          point="org.eclipse.jdt.ui.cleanUps">
       <cleanUp
-            class="ui.fix.CopyrightUpdaterCleanUp"
-            id="ui.fix.CopyrightUpdaterCleanUp">
+            class="ui.fix.LambdaToForCleanUp"
+            id="ui.fix.Lambda2ForCleanUp">
       </cleanUp>
       
       <cleanUpOptionsInitializer
-            class="ui.fix.CopyrightOnSaveOptionsInitializer"
+            class="ui.fix.LambdaToForOnSaveOptionsInitializer"
             cleanUpKind="saveAction">
       </cleanUpOptionsInitializer>
    </extension>

@@ -13,9 +13,12 @@ import org.eclipse.jdt.ui.cleanup.CleanUpRequirements;
 import org.eclipse.jdt.ui.cleanup.ICleanUp;
 import org.eclipse.jdt.ui.cleanup.ICleanUpFix;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+
+import corext.fix.LambdaToForFix;
+
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-public class CopyrightUpdaterCleanUp implements ICleanUp {
+public class LambdaToForCleanUp implements ICleanUp {
 	private CleanUpOptions fOptions;
 	private RefactoringStatus fStatus;
 	
@@ -54,7 +57,7 @@ public class CopyrightUpdaterCleanUp implements ICleanUp {
 		if (compilationUnit == null)
 			return null;
 
-		return CopyrightsFix.createCleanUp(
+		return LambdaToForFix.createCleanUp(
 				compilationUnit,
 				fOptions.isEnabled("cleanup.update_copyrights")
 		);

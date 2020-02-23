@@ -3,7 +3,7 @@ package ui.fix;
 import org.eclipse.jdt.ui.cleanup.CleanUpOptions;
 import org.eclipse.jdt.ui.cleanup.ICleanUpOptionsInitializer;
 
-public class CopyrightOnSaveOptionsInitializer implements ICleanUpOptionsInitializer {
+public class LambdaToForOnSaveOptionsInitializer implements ICleanUpOptionsInitializer {
 
 	@Override
 	public void setDefaultOptions(CleanUpOptions options) {
