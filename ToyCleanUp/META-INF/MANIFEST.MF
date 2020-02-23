@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ToyCleanUp
 Bundle-SymbolicName: ToyCleanUp;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: toycleanup.Activator
+Bundle-Activator: canonical.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.ui;bundle-version="3.20.0",

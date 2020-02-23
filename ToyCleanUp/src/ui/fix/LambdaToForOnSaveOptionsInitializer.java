@@ -7,7 +7,7 @@ public class LambdaToForOnSaveOptionsInitializer implements ICleanUpOptionsIniti
 
 	@Override
 	public void setDefaultOptions(CleanUpOptions options) {
-		options.setOption("cleanup.update_copyrights", CleanUpOptions.TRUE);
+		options.setOption("cleanup.lambda_to_for", CleanUpOptions.TRUE);
 
 	}
 

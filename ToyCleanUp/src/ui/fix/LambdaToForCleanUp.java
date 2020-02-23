@@ -31,8 +31,8 @@ public class LambdaToForCleanUp implements ICleanUp {
 
 	@Override
 	public String[] getStepDescriptions() {
-		if (fOptions.isEnabled("cleanup.update_copyrights")) {
-			return new String[] {"Update Copyrights"};
+		if (fOptions.isEnabled("cleanup.lambda_to_for")) {
+			return new String[] {"Refactor stream().foreach(lambda) as enhanced for statement"};
 		}
 		return null;
 	}
@@ -41,7 +41,7 @@ public class LambdaToForCleanUp implements ICleanUp {
 	public CleanUpRequirements getRequirements() {
 		boolean changedRegionsRequired = false;
 		Map compilerOptions = null;
-		boolean isUpdateCopyrights = fOptions.isEnabled("cleanup.update_copyrights");
+		boolean isUpdateCopyrights = fOptions.isEnabled("cleanup.lambda_to_for");
 		
 		return new CleanUpRequirements(
 				isUpdateCopyrights,
@@ -59,12 +59,12 @@ public class LambdaToForCleanUp implements ICleanUp {
 
 		return LambdaToForFix.createCleanUp(
 				compilationUnit,
-				fOptions.isEnabled("cleanup.update_copyrights")
+				fOptions.isEnabled("cleanup.lambda_to_for")
 		);
 	}
 	@Override
 	public RefactoringStatus checkPreConditions(IJavaProject project, ICompilationUnit[] compilationUnits, IProgressMonitor monitor) throws CoreException {
-		if (fOptions.isEnabled("cleanup.update_copyrights")) { //$NON-NLS-1$
+		if (fOptions.isEnabled("cleanup.lambda_to_for")) { //$NON-NLS-1$
 			fStatus= new RefactoringStatus();
 		}
 		return new RefactoringStatus();

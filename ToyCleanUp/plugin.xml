@@ -5,7 +5,7 @@
          point="org.eclipse.jdt.ui.cleanUps">
       <cleanUp
             class="ui.fix.LambdaToForCleanUp"
-            id="ui.fix.Lambda2ForCleanUp">
+            id="ui.fix.LambdaToForCleanUp">
       </cleanUp>
       
       <cleanUpOptionsInitializer
