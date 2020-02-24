@@ -10,8 +10,8 @@
 	</prerequisites>
 
 
-	<groupId>fr.lip6.pjava.refractor</groupId>
-	<artifactId>fr.lip6.pjava.refractor.parent</artifactId>
+	<groupId>fr.lip6.pjava.refactor</groupId>
+	<artifactId>fr.lip6.pjava.refactor.parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>ITS-tools ccontribution</name>
@@ -19,13 +19,13 @@
 
 	<modules>
 		<!-- Logic + functionality plugin -->
-		<module>../fr.lip6.pjava.refractor</module>
+		<module>../fr.lip6.pjava.refactor</module>
 		<!-- ui plugin : a button to invoke the behavior -->
-		<module>../fr.lip6.pjava.refractor.ui</module>
+		<module>../fr.lip6.pjava.refactor.ui</module>
 		<!-- feature plugin : to package the functionality-->
-		<module>../fr.lip6.pjava.refractor.feature</module>
+		<module>../fr.lip6.pjava.refactor.feature</module>
 		<!-- Build an update site -->
-		<module>../fr.lip6.pjava.refractor.updatesite</module>
+		<module>../fr.lip6.pjava.refactor.updatesite</module>
 	</modules>
 
 	<scm>
