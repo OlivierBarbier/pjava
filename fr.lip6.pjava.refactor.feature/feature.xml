@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="fr.lip6.move.gal.contribution.feature"
-      label="ITS Modeler : contribution plugin"
+      id="fr.lip6.pjava.refactor.feature"
+      label="Parallel Java"
       version="1.0.0.qualifier"
       provider-name="LIP6">
 
