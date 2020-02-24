@@ -56,13 +56,13 @@ public class Lambda2For extends AbstractMultiFix implements ICleanUp {
 					super.endVisit(node);
 					rewrite.remove(node, null);
 					int u=0;
-					ASTNode replacement=AST.newAST(O);
-					
-						rewrite.replace(node, "dtd", null);
-						 unit.recordModifications ();
-						 // ...			
-						 IAction VariableDeclarationStatement = createNewVariableDeclarationStatement (manager, ast);
-						 block.statements (). add (firstReferenceIndex, instruction); 
+//					ASTNode replacement=AST.newAST(O);
+//					
+//						rewrite.replace(node, "dtd", null);
+//						 unit.recordModifications ();
+//						 // ...			
+//						 IAction VariableDeclarationStatement = createNewVariableDeclarationStatement (manager, ast);
+//						 block.statements (). add (firstReferenceIndex, instruction); 
 					//TextEditGroup editGroup;
 					//rewrite.replace(node, replacement, editGroup);
 				}
