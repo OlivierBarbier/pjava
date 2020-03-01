@@ -4,17 +4,25 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.refactoring.CompilationUnitChange;
+import org.eclipse.jdt.internal.compiler.lookup.VariableBinding;
 import org.eclipse.jdt.ui.cleanup.ICleanUpFix;
 import org.eclipse.text.edits.TextEdit;
 
@@ -37,6 +45,31 @@ public class ForToLamdbaFix implements ICleanUpFix {
 		/***************************************************************/
 		compilationUnit.accept(new ASTVisitor() {
 			public void endVisit(EnhancedForStatement astFor) {
+				
+				try 
+				{
+					astFor.getBody().accept(new ASTVisitor() {
+						@Override
+						public void endVisit(SimpleName node) {
+							IBinding b = node.resolveBinding();
+							if (b instanceof org.eclipse.jdt.core.dom.IVariableBinding) {
+								IVariableBinding c = (IVariableBinding)b;
+								if ( ! c.getName().equals(astFor.getParameter().getName().getIdentifier()))
+								{
+									if (c.getModifiers() != org.eclipse.jdt.core.dom.Modifier.FINAL && ! c.isEffectivelyFinal()) {
+										throw new RuntimeException("Neither final nor effectively final");
+									}
+								}
+							}
+						}
+
+					});
+				}
+				catch (RuntimeException e)
+				{
+					return;
+				}
+				
 				AST astFactory = astFor.getAST();
 				
 				// .stream()
@@ -53,6 +86,7 @@ public class ForToLamdbaFix implements ICleanUpFix {
 				
 				LambdaExpression astLambdaExpression = astFactory.newLambdaExpression();
 				astLambdaExpression.parameters().add(rewriter.createMoveTarget(astFor.getParameter()));						
+				
 				
 				if (astFor.getBody() instanceof Block)
 				{
