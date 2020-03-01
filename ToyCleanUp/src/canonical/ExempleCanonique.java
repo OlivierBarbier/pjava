@@ -1,67 +1,57 @@
 package canonical;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.CastExpression;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.VariableDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.UndoEdit;
 
+
+// class Clazz { public final java.util.stream.Stream s = Stream.of(1); }
+// class Clazz { public static void main(String[] args) { java.util.stream.Stream s = java.util.stream.Stream.of(1); }}
+
 // https://help.eclipse.org/2019-12/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FAST.html
 public class ExempleCanonique {
 
 	public static void main(String[] args) throws Throwable, BadLocationException {
-		String javaSourceCode = "import java.util.List;\nclass X {}\n";
-		
-		/* Crée un document qui contient du code source Java */
-		Document document = new Document(javaSourceCode);
-		
-		/* Instancie un parser de code source Java */
+		String statement = "class Clazz { public static void main(String[] args) { java.util.stream.Stream<java.lang.Integer> s = java.util.stream.Stream.of(1); }}\n";
+		Document document = new Document(statement);
 		ASTParser parser = ASTParser.newParser(AST.JLS13);
-		/* Indique au parseur le code source qu'il doit prendre en entrée */
 		parser.setSource(document.get().toCharArray());
 		parser.setResolveBindings(true);
+		parser.setBindingsRecovery(true);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		
-		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-		cu.recordModifications();
-		AST ast = cu.getAST();
+		List<ITypeBinding> C = new ArrayList<>();
+		CompilationUnit es = (CompilationUnit)parser.createAST(null);
+		System.out.println(es.getAST().hasBindingsRecovery());
 		
-		/* Fabrique un noeud */
-		ImportDeclaration id = ast.newImportDeclaration();
-		id.setName(ast.newName(new String[] {"java", "util", "Set"}));
-		/* Ajoute l'instruction d'import dans l'ASR*/
-		cu.imports().add(id); 
+		es.accept(new ASTVisitor() {
+			@Override
+			public void endVisit(VariableDeclarationStatement node) {
+				node.getType().resolveBinding().isAnnotation();
+				System.out.println(1);
+			}
+		});
 		
-		/**/
-		TextEdit edits = cu.rewrite(document, null);
-		UndoEdit undo = edits.apply(document);
-		/**/
-		
-		System.out.println("Source java :");
-		System.out.println(javaSourceCode);
-		
-		System.out.println("Source java après édition :");
-		String afterEdit = document.get();
-		System.out.println(afterEdit);
-		
-		System.out.println("Source java après édition et undo :");
-		undo.apply(document);
-		String afterUndo = document.get();
-		System.out.println(afterUndo);
-		
-		Collection<String> C = new HashSet<>();
-		Stream<String> strm = C.stream();
-		
-		Class<?> clazz = Class.forName("java.util.stream.Stream");
-		System.out.println(clazz.isAssignableFrom(C.getClass()));
-	
-		System.out.println(document.get());
 	}
 
 }

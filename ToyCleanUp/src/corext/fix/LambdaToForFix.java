@@ -1,17 +1,23 @@
 package corext.fix;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -20,9 +26,12 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.refactoring.CompilationUnitChange;
+import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
 import org.eclipse.jdt.ui.cleanup.ICleanUpFix;
+import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
 /* Grammaire JAVA
@@ -43,7 +52,7 @@ public class LambdaToForFix implements ICleanUpFix {
 	@Override
 	public CompilationUnitChange createChange(IProgressMonitor progressMonitor) throws CoreException {
 		final ASTRewrite rewriter = ASTRewrite.create(compilationUnit.getAST());
-		
+	
 		/***************************************************************************/
 		/*1 Sélectionne les "forEach" éligibles au réusinage ("refactoring")       */
 		/***************************************************************************/
@@ -88,7 +97,7 @@ public class LambdaToForFix implements ICleanUpFix {
 	{
 		Collection<MethodInvocation> forEachAsCollection = new HashSet<>();
 		
-		cu.accept(new ASTVisitor() {
+		cu.accept(new ASTVisitor() {			
 			public void endVisit(MethodInvocation dotForEach) {
 				/*
 				 * dotForEach =        +---------------------------------------+
@@ -100,7 +109,29 @@ public class LambdaToForFix implements ICleanUpFix {
 				if ( ! dotForEach.getName().getIdentifier().equals("forEach")) {
 					return;
 				}
+				/*
+				System.out.println(dotForEach.resolveMethodBinding().getDeclaringClass().getQualifiedName());
+				ITypeBinding st = getStreamType();
+				System.out.println(dotForEach.resolveMethodBinding().getDeclaringClass().isSubTypeCompatible(st));
+				*/
 				
+				// dotForEach.resolveMethodBinding().overrides(ITypeBinding);
+				// dotForEach.resolveMethodBinding().getDeclaringClass().isSubTypeCompatible(ITypeBinding)
+				ITypeBinding declaringClass = dotForEach.resolveMethodBinding().getDeclaringClass();
+				/*
+				boolean found = false;
+				for(ITypeBinding i : declaringClass.getInterfaces())
+				{
+					if (i.getErasure()!= null && i.getErasure().getQualifiedName().equals("java.util.stream.Stream")) {
+						found = true;
+						break;
+					}
+				}
+				
+				if (! found) {
+					return;
+				}
+				*/
 				forEachAsCollection.add(dotForEach);
 			}
 		});
@@ -139,6 +170,7 @@ public class LambdaToForFix implements ICleanUpFix {
 					try {
 						/* Quel est la classe sur laquelle la méthode forEach est invoqué ? */
 						ITypeBinding declaringClass = forEach.resolveMethodBinding().getDeclaringClass();
+
 						
 						if ( ! declaringClass.isParameterizedType()) {
 							return false;
@@ -280,7 +312,28 @@ public class LambdaToForFix implements ICleanUpFix {
 	private static Type inferType(AST ast, VariableDeclarationFragment variable)
 	{
 		return ast.newSimpleType(
-			ast.newName(variable.resolveBinding().getType().getQualifiedName())
+			ast.newName(
+					variable.resolveBinding().getType().getQualifiedName()
+			)
 		);		
+	}
+	
+	private static Type getStreamType()
+	{
+		String statement = "java.util.stream.Stream<java.lang.String> s;\n";
+		Document document = new Document(statement);
+		ASTParser parser = ASTParser.newParser(AST.JLS13);
+		parser.setSource(document.get().toCharArray());
+		parser.setResolveBindings(true);
+		parser.setKind(ASTParser.K_STATEMENTS);
+		List<Type> C = new ArrayList<>();
+		Block es = (Block)parser.createAST(null);
+		es.accept(new ASTVisitor() {
+			public void endVisit(VariableDeclarationStatement vd)
+			{
+				C.add(vd.getType());
+			}
+		});
+		return C.get(0);		
 	}
 }

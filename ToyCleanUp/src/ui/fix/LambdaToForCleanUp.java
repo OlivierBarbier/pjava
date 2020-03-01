@@ -14,6 +14,7 @@ import org.eclipse.jdt.ui.cleanup.ICleanUp;
 import org.eclipse.jdt.ui.cleanup.ICleanUpFix;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
+import corext.fix.ForToLamdbaFix;
 import corext.fix.LambdaToForFix;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -56,11 +57,16 @@ public class LambdaToForCleanUp implements ICleanUp {
 		CompilationUnit compilationUnit = context.getAST();
 		if (compilationUnit == null)
 			return null;
-
+		return ForToLamdbaFix.createCleanUp(
+				compilationUnit,
+				fOptions.isEnabled("cleanup.lambda_to_for")
+		);
+		/*
 		return LambdaToForFix.createCleanUp(
 				compilationUnit,
 				fOptions.isEnabled("cleanup.lambda_to_for")
 		);
+*/
 	}
 	@Override
 	public RefactoringStatus checkPreConditions(IJavaProject project, ICompilationUnit[] compilationUnits, IProgressMonitor monitor) throws CoreException {
