@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="target/repository/artifacts.jar"/>
+	<classpathentry kind="lib" path="target/repository/content.jar"/>
+	<classpathentry kind="lib" path="target/repository/features/fr.lip6.pjava.refactor.feature_1.0.0.202003011459.jar"/>
+	<classpathentry kind="lib" path="target/repository/plugins/fr.lip6.pjava.refactor_1.0.0.202003011459.jar"/>
+	<classpathentry kind="lib" path="target/repository/plugins/fr.lip6.pjava.refactor.ui_1.0.0.202003011459.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

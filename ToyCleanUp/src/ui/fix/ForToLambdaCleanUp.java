@@ -14,11 +14,11 @@ import org.eclipse.jdt.ui.cleanup.ICleanUp;
 import org.eclipse.jdt.ui.cleanup.ICleanUpFix;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-import corext.fix.LambdaToForFix;
+import corext.fix.ForToLamdbaFix;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-public class LambdaToForCleanUp implements ICleanUp {
+public class ForToLambdaCleanUp implements ICleanUp {
 	private CleanUpOptions fOptions;
 	private RefactoringStatus fStatus;
 	
@@ -31,8 +31,8 @@ public class LambdaToForCleanUp implements ICleanUp {
 
 	@Override
 	public String[] getStepDescriptions() {
-		if (fOptions.isEnabled("cleanup.lambda_to_for")) {
-			return new String[] {"Refactor stream().foreach(lambda) as enhanced for statement"};
+		if (fOptions.isEnabled("cleanup.for_to_lambda")) {
+			return new String[] {"Refactor for to stream().foreach(lambda)"};
 		}
 		return null;
 	}
@@ -41,7 +41,7 @@ public class LambdaToForCleanUp implements ICleanUp {
 	public CleanUpRequirements getRequirements() {
 		boolean changedRegionsRequired = false;
 		Map compilerOptions = null;
-		boolean isUpdateCopyrights = fOptions.isEnabled("cleanup.lambda_to_for");
+		boolean isUpdateCopyrights = fOptions.isEnabled("cleanup.for_to_lambda");
 		
 		return new CleanUpRequirements(
 				isUpdateCopyrights,
@@ -57,14 +57,14 @@ public class LambdaToForCleanUp implements ICleanUp {
 		if (compilationUnit == null)
 			return null;
 
-		return LambdaToForFix.createCleanUp(
+		return ForToLamdbaFix.createCleanUp(
 				compilationUnit,
-				fOptions.isEnabled("cleanup.lambda_to_for")
+				fOptions.isEnabled("cleanup.for_to_lambda")
 		);
 	}
 	@Override
 	public RefactoringStatus checkPreConditions(IJavaProject project, ICompilationUnit[] compilationUnits, IProgressMonitor monitor) throws CoreException {
-		if (fOptions.isEnabled("cleanup.lambda_to_for")) { //$NON-NLS-1$
+		if (fOptions.isEnabled("cleanup.for_to_lambda")) { //$NON-NLS-1$
 			fStatus= new RefactoringStatus();
 		}
 		return new RefactoringStatus();

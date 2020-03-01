@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
- 
+   <extension
+         point="org.eclipse.jdt.ui.cleanUps">
+      <cleanUp
+            class="ui.fix.ForToLambdaCleanUp"
+            id="ui.fix.ForToLamdbaCleanUp">
+      </cleanUp>
+      
+      <cleanUpOptionsInitializer
+            class="ui.fix.ForToLambdaOnSaveOptionsInitializer"
+            cleanUpKind="saveAction">
+      </cleanUpOptionsInitializer>
+   </extension>
+
 </plugin>
